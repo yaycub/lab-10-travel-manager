@@ -65,4 +65,18 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can get a single trip', () => {
+    return request(app)
+      .get(`/api/v1/trips/${trip._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: trip._id.toString(),
+          location: trip.location,
+          startDate: trip.startDate.toISOString(),
+          endDate: trip.endDate.toISOString(),
+          __v: 0
+        });
+      });
+  });
 });
