@@ -94,4 +94,18 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can delete a trip by id', () => {
+    return request(app)
+      .delete(`/api/v1/trips/${trip._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: trip._id.toString(),
+          location: trip.location,
+          startDate: trip.startDate.toISOString(),
+          endDate: trip.endDate.toISOString(),
+          __v: 0
+        });
+      });
+  });
 });
