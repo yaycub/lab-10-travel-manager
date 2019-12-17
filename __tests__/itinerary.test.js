@@ -58,4 +58,19 @@ describe('Itinerary routes', () => {
         });
       });
   });
+
+  it('can delete an itinerary item', () => {
+    return request(app)
+      .delete(`/api/v1/itinerary/${itinerary._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: itinerary._id.toString(),
+          name: itinerary.name,
+          date: expect.any(String),
+          tripId: itinerary.tripId.toString(),
+          woeId: itinerary.woeId,
+          __v: 0
+        });
+      });
+  });
 });
