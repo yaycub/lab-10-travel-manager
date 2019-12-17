@@ -5,6 +5,7 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Trip = require('../lib/models/Trip');
+const Itinerary = require('../lib/models/Itinerary');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -16,12 +17,20 @@ describe('app routes', () => {
   });
 
   let trip;
+  let itinerary;
   beforeEach(async() => {
     trip = await Trip.create({
       location: 'Portland',
       startDate: new Date('2019-12-21'),
       endDate: new Date('2019-12-29')
     });
+
+    itinerary = await Itinerary.create([{
+      name: 'Fishing',
+      date: Date.now(),
+      tripId: trip._id,
+      woeId: 2475687
+    }]);
   });
 
   afterAll(() => {
@@ -70,11 +79,12 @@ describe('app routes', () => {
     return request(app)
       .get(`/api/v1/trips/${trip._id}`)
       .then(res => {
-        expect(res.body).toEqual({
+        expect(res.body).toMatchObject({
           _id: trip._id.toString(),
           location: trip.location,
           startDate: trip.startDate.toISOString(),
           endDate: trip.endDate.toISOString(),
+          itinerary: JSON.parse(JSON.stringify(itinerary)),
           __v: 0
         });
       });
